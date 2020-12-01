@@ -6,7 +6,7 @@ import HomePage  from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import SignInOutPage from './pages/sign-in-out/sign-in-out.component';
 import Header from './components/header/header.component';
-import { auth, createUseProfileDocument } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 const FiguresPage = () => (
   <div>
@@ -28,7 +28,7 @@ class App extends React.Component {
   componentDidMount() {
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if(userAuth) {
-        const userRef = await createUseProfileDocument(userAuth);
+        const userRef = await createUserProfileDocument(userAuth);
 
         userRef.onSnapshot(snapshot => {
           this.setState({
@@ -37,10 +37,12 @@ class App extends React.Component {
               ...snapshot.data()
             }
           });
+
+          console.log(this.state);
         });
       }
       else { 
-        this.setState({currentUser:userAuth});
+        this.setState({currentUser: userAuth});
       }
     });
   }
